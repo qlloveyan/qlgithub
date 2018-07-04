@@ -1,7 +1,8 @@
 #-*- coding:utf-8 -*-
 class Config(object):
-    DEBUG = True
-    DATABASE_URI = 'defaultDb.db'
+    debug = False
+    MYSQL_DATABASE_URI = 'mysql+mysqlconnector://root:123456@localhost:3306/flasker'
 
 class DevConfig(Config):
-    DATABASE_URI = 'flasker.db'
+    debug = True
+    MYSQL_DATABASE_URI = 'mysql+pymysql://root:123456@localhost:3306/flasker'

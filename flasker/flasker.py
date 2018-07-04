@@ -2,11 +2,15 @@
 
 import os
 import sqlite3
-from flask import Flask, request, session   , g, url_for, abort, render_template, flash, json
+from flask import Flask, request, session   , g, url_for, abort, render_template, flash, json, jsonify, redirect
 from conn_result import ResultObj
-import jsonify
+import settings
 
 from db.models import Users
+#from publics.self_regrex import PasswordRegexConverter
+
+import publics.self_regrex
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -14,13 +18,36 @@ import psycopg2
 
 app = Flask(__name__, static_url_path='/resources', static_folder='static', template_folder='templates')
 
+app.config.from_object(settings.DevConfig)
+
+#注册自定义转换器类
+app.url_map.converters['mre'] = publics.self_regrex.PasswordRegexConverter
+app.url_map.converters['listre'] = publics.self_regrex.ListConverter
+
 @app.errorhandler(404)
 def not_found_page(error):
+    print app.config['DEBUG']
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
 def not_found_page(error):
     return render_template('500.html'), 500
+
+@app.route('/index')
+def indexPage():
+    return 'index'
+
+@app.route('/test_redirect')
+def test_redirect():
+    return redirect(url_for('indexPage'))
+
+@app.route('/test_regrex/<mre:pass_str>')
+def test_regrex(pass_str = None):
+    return jsonify({'regex_pass': pass_str})
+
+@app.route('/test_converter/<listre:pass_str>')
+def test_param_converter(pass_str=None):
+    return "参数：%s" %pass_str
 
 @app.route('/insert', methods=['POST', 'GET'])
 def user_add():
@@ -66,7 +93,7 @@ def test_json(name, password):
         'password': password
     })
     """
-    return json.dumps({'name': name, 'password': password})
+    return jsonify({'name': name, 'password': password})
 
 @app.route('/testpg', methods=['GET'])
 def postgre_test():
@@ -84,7 +111,7 @@ def postgre_test():
         );''')
     conn.commit()
     conn.close()
-    return json.dumps({'flag': True, 'descrption': '数据库表创建成功!'})
+    return json.dumps({'flag': True, 'descrption': '数据库 表创建成功!'})
 
 # 初始化数据库连接:
 engine = create_engine('mysql+pymysql://root:123456@localhost:3306/flasker')
@@ -94,6 +121,7 @@ DBSession = sessionmaker(bind=engine)
 
 @app.route('/test_orm', methods=['POST'])
 def orm_test():
+    print app.config['MYSQL_DATABASE_URI']
     username = request.form['userName']
     age = request.form['age']
 
@@ -106,4 +134,4 @@ def orm_test():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
