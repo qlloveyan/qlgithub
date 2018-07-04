@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 import psycopg2
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/resources', static_folder='static', template_folder='templates')
 
 @app.errorhandler(404)
 def not_found_page(error):
