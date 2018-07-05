@@ -26,7 +26,6 @@ app.url_map.converters['listre'] = publics.self_regrex.ListConverter
 
 @app.errorhandler(404)
 def not_found_page(error):
-    print app.config['DEBUG']
     return render_template('404.html'), 404
 
 @app.errorhandler(500)
@@ -133,5 +132,11 @@ def orm_test():
     return json.dumps({'flag': True, 'descrption': 'orm测试成功!'})
 
 
+@app.before_request
+def before_request():
+    print '请求执行!'
+    ip = request.remote_addr
+    print ip
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
