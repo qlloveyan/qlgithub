@@ -6,7 +6,7 @@ from flask import Flask, request, session   , g, url_for, abort, render_template
 from conn_result import ResultObj
 import settings
 
-from db.models import Users
+from db.models import Users, Role
 #from publics.self_regrex import PasswordRegexConverter
 
 import publics.self_regrex
@@ -120,6 +120,10 @@ DBSession = sessionmaker(bind=engine)
 
 @app.route('/test_orm', methods=['POST'])
 def orm_test():
+    """
+    通过flask orm框架做数据库入库处理
+    :return: 入库提示json字符串
+    """
     print app.config['MYSQL_DATABASE_URI']
     username = request.form['userName']
     age = request.form['age']
@@ -128,9 +132,18 @@ def orm_test():
     new_user = Users(username, age)
     session.add(new_user)
     session.commit()
+    print 'user id : %s' %new_user.id
     session.close()
     return json.dumps({'flag': True, 'descrption': 'orm测试成功!'})
 
+"""
+@app.route('/test_relation')
+def test_relation():
+    session = DBSession()
+    user_list = session.query(Users, Role).filter(Users.role_id == Role.id).all()
+    session.close()
+    return jsonify({'flag': True, 'data': [for i in user_list]})
+"""
 
 @app.before_request
 def before_request():
