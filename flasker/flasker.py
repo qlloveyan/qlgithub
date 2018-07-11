@@ -136,14 +136,27 @@ def orm_test():
     session.close()
     return json.dumps({'flag': True, 'descrption': 'orm测试成功!'})
 
-"""
+""""""
 @app.route('/test_relation')
 def test_relation():
     session = DBSession()
     user_list = session.query(Users, Role).filter(Users.role_id == Role.id).all()
+    for listItem in user_list:
+        # print listItem
+        print listItem.Users
+        print listItem.Role
     session.close()
-    return jsonify({'flag': True, 'data': [for i in user_list]})
-"""
+    return jsonify({'flag': True})
+
+@app.route('/query_users')
+def query_users():
+    session = DBSession()
+    user_list = session.query(Users).all()
+    session.close()
+    for i in user_list:
+        print i.serialize
+    return jsonify({'flag': True, 'data': [i.serialize for i in user_list]})
+
 
 @app.before_request
 def before_request():
