@@ -124,7 +124,7 @@ def orm_test():
     通过flask orm框架做数据库入库处理
     :return: 入库提示json字符串
     """
-    print app.config['MYSQL_DATABASE_URI']
+    print(app.config['MYSQL_DATABASE_URI'])
     username = request.form['userName']
     age = request.form['age']
 
@@ -132,7 +132,7 @@ def orm_test():
     new_user = Users(username, age)
     session.add(new_user)
     session.commit()
-    print 'user id : %s' %new_user.id
+    print('user id : %s' %new_user.id)
     session.close()
     return json.dumps({'flag': True, 'descrption': 'orm测试成功!'})
 
@@ -143,8 +143,8 @@ def test_relation():
     user_list = session.query(Users, Role).filter(Users.role_id == Role.id).all()
     for listItem in user_list:
         # print listItem
-        print listItem.Users
-        print listItem.Role
+        print(listItem.Users)
+        print(listItem.Role)
     session.close()
     return jsonify({'flag': True})
 
@@ -154,15 +154,15 @@ def query_users():
     user_list = session.query(Users).all()
     session.close()
     for i in user_list:
-        print i.serialize
+        print(i.serialize)
     return jsonify({'flag': True, 'data': [i.serialize for i in user_list]})
 
 
 @app.before_request
 def before_request():
-    print '请求执行!'
+    print('请求执行!')
     ip = request.remote_addr
-    print ip
+    print(ip)
 
 if __name__ == '__main__':
     app.run()
