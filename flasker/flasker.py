@@ -2,7 +2,7 @@
 
 import os
 import sqlite3
-from flask import Flask, request, session   , g, url_for, abort, render_template, flash, json, jsonify, redirect
+from flask import Flask, request, session, g, url_for, abort, render_template, flash, json, jsonify, redirect
 from conn_result import ResultObj
 import settings
 
