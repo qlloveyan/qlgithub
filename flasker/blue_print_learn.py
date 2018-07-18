@@ -102,32 +102,50 @@ def delete_book_by_id(id):
         db.session.close()
         return jsonify({'flag': 'false', 'msg': '书籍信息删除失败!'})
 
+@app.route('/book/edit', methods=['POST'])
+def book_edit():
+    try:
+        id = request.form.get('book_id')
+        book_name = request.form.get('book_name')
+        author_id = request.form.get('author_id')
+
+        book = Book(book_name, author_id)
+        book.id = id
+        db.session.merge(book)
+        db.session.commit()
+        return jsonify({'flag': 'true', 'msg': '书籍信息编辑成功!'})
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return jsonify({'flag': 'false', 'msg': '书籍信息编辑失败!'})
+    finally:
+        db.session.close()
 
 if __name__ == '__main__':
-    # 删除数据库表
+    # # 删除数据库表
     # db.drop_all()
-    # 创建所有的表
+    # # 创建所有的表
     # db.create_all()
-
-    author1 = Author(name='老王')
-    author2 = Author(name='张三')
-
-    book1 = Book(name=u'mysql 从删除到跑路', author_id=1)
-    book2 = Book(name=u'python 大法好', author_id=1)
-    book3 = Book(name=u'颈椎病康复室', author_id=2)
-    book4 = Book(name=u'oracle 从删除到跑路', author_id=2)
-    book5 = Book(name=u'java从入门到放弃', author_id=2)
-
-    # db.session.add(author1)
-    db.session.add_all([author1, author2])
+    #
+    # author1 = Author(name='老王')
+    # author2 = Author(name='张三')
+    #
+    # book1 = Book(name=u'mysql 从删除到跑路', author_id=1)
+    # book2 = Book(name=u'python 大法好', author_id=1)
+    # book3 = Book(name=u'颈椎病康复室', author_id=2)
+    # book4 = Book(name=u'oracle 从删除到跑路', author_id=2)
+    # book5 = Book(name=u'java从入门到放弃', author_id=2)
+    #
+    # # db.session.add(author1)
+    # db.session.add_all([author1, author2])
+    # # db.session.commit()
+    #
+    # # db.session.add_all([book1, book2, book3, book4, book5])
+    # db.session.add(book1)
+    # db.session.add(book2)
+    # db.session.add(book3)
+    # db.session.add(book4)
+    # db.session.add(book5)
     # db.session.commit()
-
-    # db.session.add_all([book1, book2, book3, book4, book5])
-    db.session.add(book1)
-    db.session.add(book2)
-    db.session.add(book3)
-    db.session.add(book4)
-    db.session.add(book5)
-    db.session.commit()
 
     app.run(debug=True)
