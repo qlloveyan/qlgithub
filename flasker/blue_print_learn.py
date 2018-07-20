@@ -9,7 +9,6 @@
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost:3306/flasker'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -110,7 +109,8 @@ def book_edit():
         author_id = request.form.get('author_id')
 
         book = Book(book_name, author_id)
-        book.id = id
+        if id:
+            book.id = id
         db.session.merge(book)
         db.session.commit()
         return jsonify({'flag': 'true', 'msg': '书籍信息编辑成功!'})
