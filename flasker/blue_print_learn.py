@@ -121,6 +121,19 @@ def book_edit():
     finally:
         db.session.close()
 
+@app.route('/book/count_by_author', methods=['POST'])
+def count_by_author():
+    try:
+        category_list = db.session.query(Book.author_id, db.func.count('*').label('author_id')).group_by(Book.author_id).all()
+        db.session.commit()
+        return jsonify({'flag': 'true', 'data': category_list})
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return jsonify({'flag': 'false', 'msg': '书籍信息编辑失败!'})
+    finally:
+        db.session.close()
+
 if __name__ == '__main__':
     # # 删除数据库表
     # db.drop_all()
