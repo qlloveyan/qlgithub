@@ -6,6 +6,7 @@ class Config(object):
 
 class DevConfig(Config):
     # 本地开发环境配置
+    # 本地开发环境配置
     debug = True
     MYSQL_DATABASE_URI = 'mysql+pymysql://root:123456@localhost:3306/flasker'
 
