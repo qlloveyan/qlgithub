@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=F:\pythonWorkspace\flasker\venv"
+set "VIRTUAL_ENV=F:\pythonWorkspace\personalGit\qlgithub\flasker\venv"
 
 if defined _OLD_VIRTUAL_PROMPT (
     set "PROMPT=%_OLD_VIRTUAL_PROMPT%"
