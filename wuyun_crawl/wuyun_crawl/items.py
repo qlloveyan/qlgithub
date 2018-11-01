@@ -7,8 +7,9 @@
 
 import scrapy
 
-
 class WuyunCrawlItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    title = scrapy.Field()
+    cnvd_id = scrapy.Field()
+    push_time = scrapy.Field()
+    detail_url = scrapy.Field()
